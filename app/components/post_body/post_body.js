@@ -94,10 +94,12 @@ export default class PostBody extends PureComponent {
     };
 
     measurePost = (event) => {
+        console.warn(event.nativeEvent.layout, this.state.maxHeight);
         const {height} = event.nativeEvent.layout;
         const {deviceHeight, showLongPost} = this.props;
 
-        if (!showLongPost && height >= (deviceHeight * 1.2)) {
+        if (height >= this.state.maxHeight) {
+            console.warn('is long post');
             this.setState({
                 isLongPost: true,
             });
@@ -356,7 +358,8 @@ export default class PostBody extends PureComponent {
         } else if (message.length) {
             messageComponent = (
                 <View
-                    style={[style.messageContainer, (isPendingOrFailedPost && style.pendingPost), (isLongPost && {maxHeight})]}
+                    style={[style.messageContainer, (isPendingOrFailedPost && style.pendingPost)]}
+                    onLayout={this.measurePost}
                     removeClippedSubviews={isLongPost}
                 >
                     <Markdown
@@ -380,7 +383,7 @@ export default class PostBody extends PureComponent {
         if (!hasBeenDeleted) {
             body = (
                 <View style={style.messageBody}>
-                    <View onLayout={this.measurePost}>
+                    <View style={{maxHeight, overflow: 'hidden'}}>
                         {messageComponent}
                         {isLongPost &&
                         <ShowMoreButton
@@ -430,7 +433,6 @@ const getStyleSheet = makeStyleSheetFromTheme((theme) => {
             width: '100%',
         },
         messageContainer: {
-            overflow: 'hidden',
             width: '100%',
         },
         retry: {
