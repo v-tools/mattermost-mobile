@@ -2,6 +2,7 @@ package com.mattermost.rnbeta;
 
 import com.mattermost.share.SharePackage;
 import com.mattermost.share.RealPathUtil;
+import com.mattermost.flagsecure.FlagSecurePackage;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -86,7 +87,8 @@ public class MainApplication extends NavigationApplication implements INotificat
             new InitializationPackage(this),
             new RNRecyclerviewListPackage(),
             new RNCWebViewPackage(),
-            new RNGestureHandlerPackage()
+            new RNGestureHandlerPackage(),
+            new FlagSecurePackage()
     );
   }
 

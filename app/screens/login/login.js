@@ -15,7 +15,11 @@ import {
     TextInput,
     TouchableWithoutFeedback,
     View,
+    NativeModules,
+    Platform,
 } from 'react-native';
+const {FlagSecure} = NativeModules;
+
 import Button from 'react-native-button';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
@@ -62,6 +66,11 @@ export default class Login extends PureComponent {
     }
 
     componentWillMount() {
+        if (Platform.OS === 'android') {
+            // Activate FLAG_SECURE to prevent the login screen from appearing
+            // in screenshots or from being viewed on non-secure displays
+            FlagSecure.activate();
+        }
         Dimensions.addEventListener('change', this.orientationDidChange);
     }
 
@@ -74,6 +83,9 @@ export default class Login extends PureComponent {
     }
 
     componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            FlagSecure.deactivate();
+        }
         Dimensions.removeEventListener('change', this.orientationDidChange);
     }
 
